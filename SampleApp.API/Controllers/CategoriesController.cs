@@ -53,30 +53,29 @@ namespace ExpenseTracker.API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(long id, [FromBody] UpdateCategoryDTO updateCategoryDTO)
         {
-            var updatedCategory = await categoryService.Update(id, updateCategoryDTO.Name);
+            var category = await categoryService.Update(id, updateCategoryDTO.Name);
 
-            if (updatedCategory == null)
+            if (category == null)
             {
                 return NotFound();
             }
 
-            var updatedCategoryDTO = mapper.Map<Category>(updatedCategory);
-            return Ok(updatedCategory);
+            var categoryDTO = mapper.Map<CategoryDTO>(category);
+            return Ok(categoryDTO);
         }
 
-        //[HttpDelete("{id}")]
-        //public async Task<IActionResult> Delete(long id)
-        //{
-        //    var existingCategory = await categoryService.GetById(id);
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(long id)
+        {
+            var category = await categoryService.Delete(id);
 
-        //    if (existingCategory == null)
-        //    {
-        //        return NotFound();
-        //    }
+            if (category == null)
+            {
+                return NotFound();
+            }
 
-        //    await categoryService.Delete(existingCategory);
-
-        //    return NoContent();
-        //}
+            var categoryDTO = mapper.Map<CategoryDTO>(category);
+            return Ok(categoryDTO);
+        }
     }
 }

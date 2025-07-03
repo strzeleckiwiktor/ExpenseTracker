@@ -47,6 +47,19 @@ namespace ExpenseTracker.Application.Services
 
             return updatedCategory;
         }
+
+        public async Task<Category?> Delete(long id)
+        {
+            var category = await repository.GetByIdAsync(id);
+
+            if (category == null)
+            {
+                return null;
+            }
+
+            await repository.DeleteAsync(category);
+            return category;
+        }
     }
 }
 
