@@ -22,10 +22,11 @@ namespace ExpenseTracker.Infrastructure.Persistence
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Category>()
-                .HasMany(e => e.Expenses)
-                .WithOne(e => e.Category)
+            modelBuilder.Entity<Expense>()
+                .HasOne(e => e.Category)
+                .WithMany(e => e.Expenses)
                 .HasForeignKey(e => e.CategoryId)
+                .OnDelete(DeleteBehavior.Restrict)
                 .IsRequired();
 
             var categories = new List<Category>()

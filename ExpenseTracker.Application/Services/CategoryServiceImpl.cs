@@ -1,4 +1,5 @@
-﻿using ExpenseTracker.Application.Interfaces;
+﻿using ExpenseTracker.Application.Exceptions;
+using ExpenseTracker.Application.Interfaces;
 using ExpenseTracker.Domain.Entities;
 using ExpenseTracker.Domain.Repositories;
 using Microsoft.Extensions.Logging;
@@ -23,7 +24,7 @@ namespace ExpenseTracker.Application.Services
 
             if (category == null)
             {
-                throw new KeyNotFoundException("Entity not found");
+                throw new NotFoundException($"Entity with Id {id} not found");
             }
 
             return category;
@@ -42,7 +43,7 @@ namespace ExpenseTracker.Application.Services
 
             if (category == null)
             {
-                throw new KeyNotFoundException("Entity not found");
+                throw new NotFoundException($"Entity with Id {id} not found");
             }
 
             category.Name = name;
@@ -55,7 +56,7 @@ namespace ExpenseTracker.Application.Services
 
             if (category == null)
             {
-                throw new KeyNotFoundException("Entity not found");
+                throw new NotFoundException($"Entity with Id {id} not found");
             }
 
             await repository.DeleteAsync(category);
