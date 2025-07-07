@@ -7,7 +7,7 @@ namespace ExpenseTracker.Domain.Repositories
         public Task<IEnumerable<Expense>> GetAllAsync();
         public Task<Expense?> GetByIdAsync(long id);
         public Task<long> CreateAsync(Expense expense);
-        public Task<Expense> UpdateAsync(Expense expense);
-        public Task<Expense> DeleteAsync(Expense expense);
+        public Task UpdateAsync(Expense expense);
+        public Task DeleteAsync(Expense expense);
     }
 }

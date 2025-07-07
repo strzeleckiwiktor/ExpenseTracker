@@ -24,6 +24,11 @@ namespace ExpenseTracker.Application.Services
         {
             var expense = await expenseRepository.GetByIdAsync(id);
 
+            if (expense == null)
+            {
+                throw new KeyNotFoundException("Entity not found");
+            }
+
             return expense;
         }
 
@@ -37,8 +42,43 @@ namespace ExpenseTracker.Application.Services
             }
 
             expense.Category = category;
-
             return await expenseRepository.CreateAsync(expense);
+        }
+
+        public async Task Update(long id, string name, double amount, long categoryId)
+        {
+            var expense = await expenseRepository.GetByIdAsync(id);
+
+            if (expense == null)
+            {
+                throw new KeyNotFoundException("Entity not found");
+            }
+
+            var category = await categoryRepository.GetByIdAsync(categoryId);
+
+            if (category == null)
+            {
+                throw new ArgumentException("Invalid category id");
+            }
+
+            expense.Name = name;
+            expense.Amount = amount;
+            expense.CategoryId = categoryId;
+            expense.Category = category;
+
+            await expenseRepository.UpdateAsync(expense);
+        }
+
+        public async Task Delete(long id)
+        {
+            var expense = await expenseRepository.GetByIdAsync(id);
+
+            if (expense == null)
+            {
+                throw new KeyNotFoundException("Entity not found");
+            }
+
+            await expenseRepository.DeleteAsync(expense);
         }
     }
 }

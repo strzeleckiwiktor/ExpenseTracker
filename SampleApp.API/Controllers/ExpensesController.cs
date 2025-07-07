@@ -31,16 +31,16 @@ namespace ExpenseTracker.API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(long id)
         {
-            var expense = await expenseService.GetById(id);
-
-            if (expense == null)
+            try
             {
-                return NotFound();
+                var expense = await expenseService.GetById(id);
+                var expenseDTO = mapper.Map<ExpenseDTO>(expense);
+                return Ok(expenseDTO);
             }
-
-            var expenseDTO = mapper.Map<ExpenseDTO>(expense);
-
-            return Ok(expenseDTO);
+            catch (KeyNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
         }
 
         [HttpPost]
@@ -49,9 +49,7 @@ namespace ExpenseTracker.API.Controllers
             try
             {
                 var expense = mapper.Map<Expense>(createExpenseDTO);
-
                 var id = await expenseService.Create(expense);
-
                 return CreatedAtAction(nameof(GetById), new { id }, null);
             }
             catch (ArgumentException e)
@@ -60,37 +58,37 @@ namespace ExpenseTracker.API.Controllers
             }
         }
 
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> Update(long id, [FromBody] ExpenseDTO expenseDTO)
-        //{
-        //    var existingExpense = await repository.GetByIdAsync(id);
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(long id, [FromBody] UpdateExpenseDTO updateExpenseDTO)
+        {
+            try
+            {
+                await expenseService.Update(
+                    id,
+                    updateExpenseDTO.Name,
+                    updateExpenseDTO.Amount,
+                    updateExpenseDTO.CategoryId
+                   );
+                return Ok();
+            }
+            catch (ArgumentException e)
+            {
+                return NotFound(e.Message);
+            }
+        }
 
-        //    if (existingExpense == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    existingExpense.Amount = expenseDTO.Amount;
-        //    existingExpense.CategoryId = expenseDTO.CategoryId;
-
-        //    var updatedExpense = await repository.UpdateAsync(existingExpense);
-
-        //    return Ok(updatedExpense);
-        //}
-
-        //[HttpDelete("{id}")]
-        //public async Task<IActionResult> Delete(long id)
-        //{
-        //    var existingExpense = await repository.GetByIdAsync(id);
-
-        //    if (existingExpense == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    await repository.DeleteAsync(existingExpense);
-
-        //    return NoContent();
-        //}
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(long id)
+        {
+            try
+            {
+                await expenseService.Delete(id);
+                return Ok();
+            }
+            catch (ArgumentException e)
+            {
+                return NotFound(e.Message);
+            }
+        }
     }
 }

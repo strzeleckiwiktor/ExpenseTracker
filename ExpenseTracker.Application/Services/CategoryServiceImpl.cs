@@ -12,7 +12,6 @@ namespace ExpenseTracker.Application.Services
     {
         public async Task<IEnumerable<Category>> GetAll()
         {
-            logger.LogInformation("Getting all categories");
             var categories = await repository.GetAllAsync();
 
             return categories!;
@@ -21,6 +20,11 @@ namespace ExpenseTracker.Application.Services
         public async Task<Category?> GetById(long id)
         {
             var category = await repository.GetByIdAsync(id);
+
+            if (category == null)
+            {
+                throw new KeyNotFoundException("Entity not found");
+            }
 
             return category;
         }
@@ -32,33 +36,29 @@ namespace ExpenseTracker.Application.Services
             return id;
         }
 
-        public async Task<Category?> Update(long id, String name)
+        public async Task Update(long id, String name)
         {
             var category = await repository.GetByIdAsync(id);
 
             if (category == null)
             {
-                return null;
+                throw new KeyNotFoundException("Entity not found");
             }
 
             category.Name = name;
-
-            var updatedCategory = await repository.UpdateAsync(category);
-
-            return updatedCategory;
+            await repository.UpdateAsync(category);
         }
 
-        public async Task<Category?> Delete(long id)
+        public async Task Delete(long id)
         {
             var category = await repository.GetByIdAsync(id);
 
             if (category == null)
             {
-                return null;
+                throw new KeyNotFoundException("Entity not found");
             }
 
             await repository.DeleteAsync(category);
-            return category;
         }
     }
 }

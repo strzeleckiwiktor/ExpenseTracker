@@ -27,18 +27,16 @@ namespace ExpenseTracker.Infrastructure.Repositories
             return category.Id;
         }
 
-        public async Task<Category> UpdateAsync(Category category)
+        public async Task UpdateAsync(Category category)
         {
             dbContext.Categories.Update(category);
             await dbContext.SaveChangesAsync();
-            return category;
         }
 
-        public async Task<Category> DeleteAsync(Category category)
+        public async Task DeleteAsync(Category category)
         {
             dbContext.Categories.Remove(category);
             await dbContext.SaveChangesAsync();
-            return category;
         }
     }
 }

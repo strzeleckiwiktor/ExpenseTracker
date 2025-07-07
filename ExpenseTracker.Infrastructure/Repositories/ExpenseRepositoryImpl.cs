@@ -33,18 +33,16 @@ namespace ExpenseTracker.Infrastructure.Repositories
             return expense.Id;
         }
 
-        public async Task<Expense> DeleteAsync(Expense expense)
+        public async Task DeleteAsync(Expense expense)
         {
             dbContext.Expenses.Remove(expense);
             await dbContext.SaveChangesAsync();
-            return expense;
         }
 
-        public async Task<Expense> UpdateAsync(Expense expense)
+        public async Task UpdateAsync(Expense expense)
         {
             dbContext.Expenses.Update(expense);
             await dbContext.SaveChangesAsync();
-            return expense;
         }
     }
 }
