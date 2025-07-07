@@ -36,6 +36,7 @@ builder.Services.ConfigurePresentationServices();
 
 
 var app = builder.Build();
+app.UseExceptionHandler(_ => { });
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

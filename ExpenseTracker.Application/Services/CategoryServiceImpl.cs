@@ -14,7 +14,6 @@ namespace ExpenseTracker.Application.Services
         public async Task<IEnumerable<Category>> GetAll()
         {
             var categories = await repository.GetAllAsync();
-
             return categories!;
         }
 
@@ -24,7 +23,7 @@ namespace ExpenseTracker.Application.Services
 
             if (category == null)
             {
-                throw new NotFoundException($"Entity with Id {id} not found");
+                throw new NotFoundException($"Category with Id {id} not found.");
             }
 
             return category;
@@ -33,7 +32,6 @@ namespace ExpenseTracker.Application.Services
         public async Task<long> Create(Category category)
         {
             var id = await repository.CreateAsync(category);
-
             return id;
         }
 
@@ -43,7 +41,7 @@ namespace ExpenseTracker.Application.Services
 
             if (category == null)
             {
-                throw new NotFoundException($"Entity with Id {id} not found");
+                throw new NotFoundException($"Category with Id {id} not found.");
             }
 
             category.Name = name;
@@ -56,7 +54,7 @@ namespace ExpenseTracker.Application.Services
 
             if (category == null)
             {
-                throw new NotFoundException($"Entity with Id {id} not found");
+                throw new NotFoundException($"Category with Id {id} not found.");
             }
 
             await repository.DeleteAsync(category);

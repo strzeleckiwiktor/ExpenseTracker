@@ -15,9 +15,7 @@ namespace ExpenseTracker.Application.Services
     {
         public async Task<IEnumerable<Expense>> GetAll()
         {
-            logger.LogInformation("Getting all expenses");
             var expenses = await expenseRepository.GetAllAsync();
-
             return expenses;
         }
 
@@ -27,7 +25,7 @@ namespace ExpenseTracker.Application.Services
 
             if (expense == null)
             {
-                throw new NotFoundException($"Entity with Id {id} not found");
+                throw new NotFoundException($"Expense with Id {id} not found.");
             }
 
             return expense;
@@ -36,20 +34,20 @@ namespace ExpenseTracker.Application.Services
         public async Task<IEnumerable<Expense>> GetExpensesByCategory(long categoryId)
         {
             if (!await categoryRepository.ExistsAsync(categoryId))
-                throw new NotFoundException($"Category with Id {categoryId} not found");
+                throw new NotFoundException($"Category with Id {categoryId} not found.");
 
             var expenses = await expenseRepository.GetExpensesByCategoryAsync(categoryId);
-
             return expenses;
         }
 
         public async Task<long> Create(Expense expense)
         {
-            var category = await categoryRepository.GetByIdAsync(expense.CategoryId);
+            var categoryId = expense.CategoryId;
+            var category = await categoryRepository.GetByIdAsync(categoryId);
 
             if (category == null)
             {
-                throw new ArgumentException("Invalid category id");
+                throw new ArgumentException($"Category with Id: {categoryId} not found.");
             }
 
             expense.Category = category;
@@ -62,14 +60,14 @@ namespace ExpenseTracker.Application.Services
 
             if (expense == null)
             {
-                throw new NotFoundException($"Entity with Id {id} not found");
+                throw new NotFoundException($"Expense with Id: {id} not found.");
             }
 
             var category = await categoryRepository.GetByIdAsync(categoryId);
 
             if (category == null)
             {
-                throw new ArgumentException("Invalid category id");
+                throw new ArgumentException($"Category with Id: {categoryId} not found.");
             }
 
             expense.Name = name;
@@ -86,7 +84,7 @@ namespace ExpenseTracker.Application.Services
 
             if (expense == null)
             {
-                throw new NotFoundException($"Entity with Id {id} not found");
+                throw new NotFoundException($"Expense with Id {id} not found");
             }
 
             await expenseRepository.DeleteAsync(expense);

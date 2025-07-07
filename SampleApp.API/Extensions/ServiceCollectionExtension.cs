@@ -14,7 +14,8 @@ namespace ExpenseTracker.API.Extensions
             services.AddAutoMapper(applicationAssembly);
 
             services.AddValidatorsFromAssembly(applicationAssembly);
-            services.AddFluentValidationAutoValidation();
+            services.AddExceptionHandler<GlobalExceptionHandler>();
+            //services.AddFluentValidationAutoValidation();
         }
     }
 }

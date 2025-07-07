@@ -29,31 +29,17 @@ namespace ExpenseTracker.API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(long id)
         {
-            try
-            {
-                var category = await categoryService.GetById(id);
-                var categoryDTO = mapper.Map<CategoryDTO>(category);
-                return Ok(categoryDTO);
-            }
-            catch (KeyNotFoundException e)
-            {
-                return NotFound(e.Message);
-            }
+            var category = await categoryService.GetById(id);
+            var categoryDTO = mapper.Map<CategoryDTO>(category);
+            return Ok(categoryDTO);
         }
 
         [HttpGet("{id}/expenses")]
         public async Task<IActionResult> GetExpensesByCategory(long id)
         {
-            try
-            {
-                var expenses = await expenseService.GetExpensesByCategory(id);
-                var expenseDTOs = mapper.Map<IEnumerable<ExpenseDTO>>(expenses);
-                return Ok(expenseDTOs);
-            }
-            catch (NotFoundException e)
-            {
-                return NotFound(e.Message);
-            }
+            var expenses = await expenseService.GetExpensesByCategory(id);
+            var expenseDTOs = mapper.Map<IEnumerable<ExpenseDTO>>(expenses);
+            return Ok(expenseDTOs);
         }
 
         [HttpPost]
@@ -67,29 +53,15 @@ namespace ExpenseTracker.API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(long id, [FromBody] UpdateCategoryDTO updateCategoryDTO)
         {
-            try
-            {
-                await categoryService.Update(id, updateCategoryDTO.Name);
-                return Ok();
-            } 
-            catch (KeyNotFoundException e)
-            {
-                return NotFound(e.Message);
-            }
+            await categoryService.Update(id, updateCategoryDTO.Name);
+            return Ok();
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(long id)
         {
-            try
-            {
-                await categoryService.Delete(id);
-                return Ok();
-            }
-            catch (KeyNotFoundException e)
-            {
-                return NotFound(e.Message);
-            }
+            await categoryService.Delete(id);
+            return Ok();
         }
     }
 }
