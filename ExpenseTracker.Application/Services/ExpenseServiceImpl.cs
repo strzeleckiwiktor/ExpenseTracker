@@ -27,7 +27,7 @@ namespace ExpenseTracker.Application.Services
 
             if (expense == null)
             {
-                throw new NotFoundException($"Entity with Id {id} not found");
+                throw new NotFoundException($"Entity with Id: {id} not found.");
             }
 
             return expense;
