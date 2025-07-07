@@ -33,6 +33,16 @@ namespace ExpenseTracker.Application.Services
             return expense;
         }
 
+        public async Task<IEnumerable<Expense>> GetExpensesByCategory(long categoryId)
+        {
+            if (!await categoryRepository.ExistsAsync(categoryId))
+                throw new NotFoundException($"Category with Id {categoryId} not found");
+
+            var expenses = await expenseRepository.GetExpensesByCategoryAsync(categoryId);
+
+            return expenses;
+        }
+
         public async Task<long> Create(Expense expense)
         {
             var category = await categoryRepository.GetByIdAsync(expense.CategoryId);

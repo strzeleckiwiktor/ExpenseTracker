@@ -9,5 +9,6 @@ namespace ExpenseTracker.Domain.Repositories
         public Task<long> CreateAsync(Category category);
         public Task UpdateAsync(Category category);
         public Task DeleteAsync(Category category);
+        public Task<bool> ExistsAsync(long id);
     }
 }

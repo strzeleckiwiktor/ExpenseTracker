@@ -4,6 +4,8 @@ using AutoMapper;
 using ExpenseTracker.Domain.Entities;
 using ExpenseTracker.API.DTOs.Category;
 using ExpenseTracker.Application.Interfaces;
+using ExpenseTracker.Application.Exceptions;
+using ExpenseTracker.API.DTOs.Expense;
 
 namespace ExpenseTracker.API.Controllers
 {
@@ -11,6 +13,7 @@ namespace ExpenseTracker.API.Controllers
     [ApiController]
     public class CategoriesController(
         ICategoryService categoryService,
+        IExpenseService expenseService,
         IMapper mapper
         ) : ControllerBase
     {
@@ -33,6 +36,21 @@ namespace ExpenseTracker.API.Controllers
                 return Ok(categoryDTO);
             }
             catch (KeyNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+        }
+
+        [HttpGet("{id}/expenses")]
+        public async Task<IActionResult> GetExpensesByCategory(long id)
+        {
+            try
+            {
+                var expenses = await expenseService.GetExpensesByCategory(id);
+                var expenseDTOs = mapper.Map<IEnumerable<ExpenseDTO>>(expenses);
+                return Ok(expenseDTOs);
+            }
+            catch (NotFoundException e)
             {
                 return NotFound(e.Message);
             }

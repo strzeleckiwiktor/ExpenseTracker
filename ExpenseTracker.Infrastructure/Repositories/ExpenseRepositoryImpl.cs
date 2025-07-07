@@ -26,6 +26,16 @@ namespace ExpenseTracker.Infrastructure.Repositories
             return expense;
         }
 
+        public async Task<IEnumerable<Expense>> GetExpensesByCategoryAsync(long categoryId)
+        {
+            var expenses = await dbContext.Expenses
+                .Where(e => e.CategoryId == categoryId)
+                .Include(e => e.Category)
+                .ToListAsync();
+
+            return expenses;
+        }
+
         public async Task<long> CreateAsync(Expense expense)
         {
             dbContext.Expenses.Add(expense);
@@ -44,5 +54,6 @@ namespace ExpenseTracker.Infrastructure.Repositories
             dbContext.Expenses.Update(expense);
             await dbContext.SaveChangesAsync();
         }
+
     }
 }

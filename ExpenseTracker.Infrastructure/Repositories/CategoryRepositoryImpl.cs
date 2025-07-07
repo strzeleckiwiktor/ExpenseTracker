@@ -38,5 +38,10 @@ namespace ExpenseTracker.Infrastructure.Repositories
             dbContext.Categories.Remove(category);
             await dbContext.SaveChangesAsync();
         }
+
+        public async Task<bool> ExistsAsync(long id)
+        {
+            return await dbContext.Categories.AnyAsync(c => c.Id == id);
+        }
     }
 }
