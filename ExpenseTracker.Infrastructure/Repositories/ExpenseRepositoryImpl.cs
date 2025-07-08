@@ -1,6 +1,8 @@
 ﻿using ExpenseTracker.Domain.Entities;
 using ExpenseTracker.Domain.Repositories;
+using ExpenseTracker.Infrastructure.Exceptions;
 using ExpenseTracker.Infrastructure.Persistence;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace ExpenseTracker.Infrastructure.Repositories
@@ -54,6 +56,5 @@ namespace ExpenseTracker.Infrastructure.Repositories
             dbContext.Expenses.Update(expense);
             await dbContext.SaveChangesAsync();
         }
-
     }
 }

@@ -1,6 +1,8 @@
 ﻿using ExpenseTracker.Domain.Entities;
 using ExpenseTracker.Domain.Repositories;
+using ExpenseTracker.Infrastructure.Exceptions;
 using ExpenseTracker.Infrastructure.Persistence;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace ExpenseTracker.Infrastructure.Repositories
@@ -35,8 +37,19 @@ namespace ExpenseTracker.Infrastructure.Repositories
 
         public async Task DeleteAsync(Category category)
         {
-            dbContext.Categories.Remove(category);
-            await dbContext.SaveChangesAsync();
+            try
+            {
+                dbContext.Categories.Remove(category);
+                await dbContext.SaveChangesAsync();
+            }
+            catch (DbUpdateException ex)
+            {
+                if (ex.InnerException is SqlException sqlEx && sqlEx.Number == 547)
+                {
+                    throw new ForeignKeyConstraintViolationException("Cannot delete entity due to related records.", ex);
+                }
+                throw;
+            }
         }
 
         public async Task<bool> ExistsAsync(long id)
