@@ -5,13 +5,11 @@ namespace ExpenseTracker.Infrastructure.Persistence
 {
     internal class ExpenseTrackerDbContext : DbContext
     {
-        public ExpenseTrackerDbContext(DbContextOptions<ExpenseTrackerDbContext> options) : base(options)
-        {
-
-        }
+        public ExpenseTrackerDbContext(DbContextOptions<ExpenseTrackerDbContext> options) : base(options) { }
 
         internal DbSet<Expense> Expenses { get; set; }
         internal DbSet<Category> Categories { get; set; }
+        internal DbSet<Budget> Budgets { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

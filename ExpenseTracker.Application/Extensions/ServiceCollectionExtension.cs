@@ -10,6 +10,7 @@ namespace ExpenseTracker.Application.Extensions
         {
             services.AddScoped<ICategoryService, CategoryServiceImpl>();
             services.AddScoped<IExpenseService, ExpenseServiceImpl>();
+            services.AddScoped<IBudgetService, BudgetServiceImpl>();
         }
     }
 }
