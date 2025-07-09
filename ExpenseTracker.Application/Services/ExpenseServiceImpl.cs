@@ -54,7 +54,7 @@ namespace ExpenseTracker.Application.Services
             return await expenseRepository.CreateAsync(expense);
         }
 
-        public async Task Update(long id, string name, double amount, long categoryId)
+        public async Task Update(long id, string name, double amount, string description, long categoryId)
         {
             var expense = await expenseRepository.GetByIdAsync(id);
 
@@ -72,6 +72,7 @@ namespace ExpenseTracker.Application.Services
 
             expense.Name = name;
             expense.Amount = amount;
+            expense.Description = description;
             expense.CategoryId = categoryId;
             expense.Category = category;
 

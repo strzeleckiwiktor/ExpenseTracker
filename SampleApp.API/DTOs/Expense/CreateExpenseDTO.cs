@@ -5,6 +5,7 @@ namespace ExpenseTracker.API.DTOs.Expense
     public record CreateExpenseDTO(
         string Name, 
         double Amount, 
+        string Description,
         long CategoryId
     );
    

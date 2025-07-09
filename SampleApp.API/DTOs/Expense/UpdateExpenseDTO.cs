@@ -3,6 +3,7 @@
     public record UpdateExpenseDTO(
         string Name,
         double Amount,
+        string Description,
         long CategoryId
     );
 }

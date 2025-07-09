@@ -8,6 +8,7 @@ namespace ExpenseTracker.API.DTOs.Expense
         long Id, 
         string Name, 
         double Amount, 
+        string Description,
         string CategoryName
     );
  
