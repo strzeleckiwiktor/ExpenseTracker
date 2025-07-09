@@ -1,12 +1,7 @@
 ﻿using ExpenseTracker.Domain.Entities;
 using ExpenseTracker.Domain.Repositories;
 using ExpenseTracker.Infrastructure.Persistence;
-using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace ExpenseTracker.Infrastructure.Repositories
 {
@@ -31,7 +26,7 @@ namespace ExpenseTracker.Infrastructure.Repositories
             return budgets;
         }
 
-        public async Task<Budget?> GetByIdAsync(long id)
+        public async Task<Budget?> GetByIdAsync(long id)         
         {
             var budget = await dbContext.Budgets.SingleOrDefaultAsync(b => b.Id == id);
             return budget;

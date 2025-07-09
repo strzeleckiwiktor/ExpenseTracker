@@ -1,4 +1,5 @@
-﻿using ExpenseTracker.Application.Interfaces;
+﻿using ExpenseTracker.Application.Exceptions;
+using ExpenseTracker.Application.Interfaces;
 using ExpenseTracker.Domain.Entities;
 using ExpenseTracker.Domain.Repositories;
 using System;
@@ -9,11 +10,12 @@ using System.Threading.Tasks;
 
 namespace ExpenseTracker.Application.Services
 {
-    internal class BudgetServiceImpl : IBudgetService
+    internal class BudgetServiceImpl(IBudgetRepository budgetRepository) : IBudgetService
     {
-        public Task<long> Create(Budget budget)
+        public async Task<long> Create(Budget budget)
         {
-            throw new NotImplementedException();
+            var id = await budgetRepository.CreateAsync(budget);
+            return id;
         }
 
         public Task Delete(long id)
@@ -21,14 +23,22 @@ namespace ExpenseTracker.Application.Services
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Budget>> GetAll()
+        public async Task<IEnumerable<Budget>> GetAll()
         {
-            throw new NotImplementedException();
+            var budgets = await budgetRepository.GetAllAsync();
+            return budgets;
         }
 
-        public Task<Budget?> GetById(long id)
+        public async Task<Budget?> GetById(long id)
         {
-            throw new NotImplementedException();
+            var budget = await budgetRepository.GetByIdAsync(id);
+
+            if (budget == null)
+            {
+                throw new NotFoundException($"Budget with Id: {id} not found.");
+            }
+
+            return budget;
         }
 
         public Task Update(long id, string name, double amount, DateOnly startDate, DateOnly endDate)

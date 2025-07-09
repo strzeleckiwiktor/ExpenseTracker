@@ -9,7 +9,7 @@ namespace ExpenseTracker.Domain.Entities
     public class Budget
     {
         public long Id { get; set; }
-        public string Name { get; set; }
+        public string Name { get; set; } = default!;
         public double Amount { get; set; }
         public DateOnly StartDate { get; set; }
         public DateOnly EndDate { get; set; }

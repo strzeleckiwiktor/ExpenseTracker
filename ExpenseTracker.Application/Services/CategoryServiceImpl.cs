@@ -14,7 +14,7 @@ namespace ExpenseTracker.Application.Services
         public async Task<IEnumerable<Category>> GetAll()
         {
             var categories = await repository.GetAllAsync();
-            return categories!;
+            return categories;
         }
 
         public async Task<Category?> GetById(long id)

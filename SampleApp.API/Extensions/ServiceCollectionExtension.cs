@@ -11,10 +11,11 @@ namespace ExpenseTracker.API.Extensions
 
             services.AddControllers();
 
+            services.AddExceptionHandler<GlobalExceptionHandler>();
+
             services.AddAutoMapper(applicationAssembly);
 
             services.AddValidatorsFromAssembly(applicationAssembly);
-            services.AddExceptionHandler<GlobalExceptionHandler>();
             services.AddFluentValidationAutoValidation();
         }
     }
