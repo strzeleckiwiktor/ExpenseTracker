@@ -2,11 +2,6 @@
 using ExpenseTracker.Application.Interfaces;
 using ExpenseTracker.Domain.Entities;
 using ExpenseTracker.Domain.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ExpenseTracker.Application.Services
 {
@@ -18,9 +13,16 @@ namespace ExpenseTracker.Application.Services
             return id;
         }
 
-        public Task Delete(long id)
+        public async Task Delete(long id)
         {
-            throw new NotImplementedException();
+            var budget = await budgetRepository.GetByIdAsync(id);
+
+            if (budget == null)
+            {
+                throw new NotFoundException($"Budget with Id: {id} not found.");
+            }
+
+            await budgetRepository.DeleteAsync(budget);
         }
 
         public async Task<IEnumerable<Budget>> GetAll()

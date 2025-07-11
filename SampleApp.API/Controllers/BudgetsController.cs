@@ -37,5 +37,12 @@ namespace ExpenseTracker.API.Controllers
             var id =  await budgetService.Create(budget);
             return CreatedAtAction(nameof(GetById), new { id }, null);
         }
+
+        [HttpDelete]
+        public async Task<IActionResult> Delete(long id)
+        {
+            await budgetService.Delete(id);
+            return Ok();
+        }
     }
 }
