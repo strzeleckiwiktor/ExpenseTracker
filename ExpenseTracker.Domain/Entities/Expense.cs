@@ -8,7 +8,7 @@ namespace ExpenseTracker.Domain.Entities
         public string Name { get; set; } = default!;
         public double Amount { get; set; }
         public string? Description { get; set; }
-        public DateTime CreatedAt { get; set; } = DateTime.Now;
+        public DateOnly Date { get; set; } = DateOnly.FromDateTime(DateTime.Now);
         public long CategoryId { get; set; }
 
         //Navigation properties

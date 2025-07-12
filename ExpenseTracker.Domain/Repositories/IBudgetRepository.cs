@@ -11,6 +11,7 @@ namespace ExpenseTracker.Domain.Repositories
     {
         public Task<IEnumerable<Budget>> GetAllAsync();
         public Task<Budget?> GetByIdAsync(long id);
+        public Task<IEnumerable<Budget>> GetBudgetsByExpenseDate(DateOnly date);
         public Task<long> CreateAsync(Budget budget);
         public Task UpdateAsync(Budget budget);
         public Task DeleteAsync(Budget budget);

@@ -10,6 +10,8 @@ namespace ExpenseTracker.Application.Services
     internal class ExpenseServiceImpl(
         IExpenseRepository expenseRepository,
         ICategoryRepository categoryRepository,
+        IBudgetRepository budgetRepository,
+        IExpenseBudgetRepository expenseBudgetRepository,
         ILogger<ExpenseServiceImpl> logger
         ) : IExpenseService
     {
@@ -51,7 +53,21 @@ namespace ExpenseTracker.Application.Services
             }
 
             expense.Category = category;
-            return await expenseRepository.CreateAsync(expense);
+            var expenseId = await expenseRepository.CreateAsync(expense);
+
+            var budgets = await budgetRepository.GetBudgetsByExpenseDate(expense.Date);
+
+            foreach (Budget budget in budgets)
+            {
+                var expenseBudget = new ExpenseBudget
+                {
+                    BudgetId = budget.Id,
+                    ExpenseId = expenseId,
+                };
+                await expenseBudgetRepository.CreateAsync(expenseBudget);
+            }
+
+            return expenseId;
         }
 
         public async Task Update(long id, string name, double amount, string description, long categoryId)

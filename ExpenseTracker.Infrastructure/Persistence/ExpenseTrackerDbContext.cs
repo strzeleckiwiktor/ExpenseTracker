@@ -10,6 +10,7 @@ namespace ExpenseTracker.Infrastructure.Persistence
         internal DbSet<Expense> Expenses { get; set; }
         internal DbSet<Category> Categories { get; set; }
         internal DbSet<Budget> Budgets { get; set; }
+        internal DbSet<ExpenseBudget> ExpenseBudgetAssociations { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

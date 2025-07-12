@@ -7,6 +7,27 @@ namespace ExpenseTracker.Infrastructure.Repositories
 {
     internal class BudgetRepositoryImpl(ExpenseTrackerDbContext dbContext) : IBudgetRepository
     {
+       public async Task<IEnumerable<Budget>> GetAllAsync()
+        {
+            var budgets = await dbContext.Budgets.ToListAsync();
+            return budgets;
+        }
+
+        public async Task<IEnumerable<Budget>> GetBudgetsByExpenseDate(DateOnly date)
+        {
+            var budgets = from budget in dbContext.Budgets
+                          where date >= budget.StartDate && date <= budget.EndDate
+                          select budget;
+
+            return await budgets.ToListAsync();
+        }
+
+        public async Task<Budget?> GetByIdAsync(long id)         
+        {
+            var budget = await dbContext.Budgets.SingleOrDefaultAsync(b => b.Id == id);
+            return budget;
+        }
+
         public async Task<long> CreateAsync(Budget budget)
         {
             dbContext.Add(budget);
@@ -18,18 +39,6 @@ namespace ExpenseTracker.Infrastructure.Repositories
         {
             dbContext.Remove(budget);
             await dbContext.SaveChangesAsync();
-        }
-
-        public async Task<IEnumerable<Budget>> GetAllAsync()
-        {
-            var budgets = await dbContext.Budgets.ToListAsync();
-            return budgets;
-        }
-
-        public async Task<Budget?> GetByIdAsync(long id)         
-        {
-            var budget = await dbContext.Budgets.SingleOrDefaultAsync(b => b.Id == id);
-            return budget;
         }
 
         public async Task UpdateAsync(Budget budget)
