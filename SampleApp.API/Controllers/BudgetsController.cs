@@ -25,8 +25,8 @@ namespace ExpenseTracker.API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(long id)
         {
-            var budget = await budgetService.GetById(id);
-            var budgetDTO = mapper.Map<BudgetDTO>(budget);
+            var budgetDetails = await budgetService.GetById(id);
+            var budgetDTO = mapper.Map<BudgetDTO>(budgetDetails);
             return Ok(budgetDTO);
         }
 

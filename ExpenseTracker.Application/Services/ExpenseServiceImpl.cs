@@ -70,7 +70,7 @@ namespace ExpenseTracker.Application.Services
             return expenseId;
         }
 
-        public async Task Update(long id, string name, double amount, string description, long categoryId)
+        public async Task Update(long id, string name, double amount, DateOnly date, string description, long categoryId)
         {
             var expense = await expenseRepository.GetByIdAsync(id);
 
@@ -89,6 +89,7 @@ namespace ExpenseTracker.Application.Services
             expense.Name = name;
             expense.Amount = amount;
             expense.Description = description;
+            expense.Date = date;
             expense.CategoryId = categoryId;
             expense.Category = category;
 

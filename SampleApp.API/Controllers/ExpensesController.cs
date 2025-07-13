@@ -49,6 +49,7 @@ namespace ExpenseTracker.API.Controllers
                     id,
                     updateExpenseDTO.Name,
                     updateExpenseDTO.Amount,
+                    updateExpenseDTO.Date,
                     updateExpenseDTO.Description,
                     updateExpenseDTO.CategoryId);
             return Ok();

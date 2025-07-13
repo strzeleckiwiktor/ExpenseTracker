@@ -4,7 +4,8 @@ namespace ExpenseTracker.API.DTOs.Expense
 {
     public record CreateExpenseDTO(
         string Name, 
-        double Amount, 
+        double Amount,
+        DateOnly Date,
         string Description,
         long CategoryId
     );
