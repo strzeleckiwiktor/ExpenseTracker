@@ -1,16 +1,53 @@
-﻿using ExpenseTracker.Domain.Entities;
+﻿using ExpenseTracker.Application.Exceptions;
+using ExpenseTracker.Domain.Entities;
 using ExpenseTracker.Domain.Repositories;
 using ExpenseTracker.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace ExpenseTracker.Infrastructure.Repositories
 {
-    internal class BudgetRepositoryImpl(ExpenseTrackerDbContext dbContext) : IBudgetRepository
+    internal class BudgetRepositoryImpl(ExpenseTrackerDbContext dbContext, ILogger<BudgetRepositoryImpl> logger) : IBudgetRepository
     {
-       public async Task<IEnumerable<Budget>> GetAllAsync()
+        public async Task<IEnumerable<(Budget budget, double amountSpent)>> GetAllBudgetsWithAmountSpentAsync()
         {
-            var budgets = await dbContext.Budgets.ToListAsync();
-            return budgets;
+            var result = await (
+                from budget in dbContext.Budgets
+                join expenseBudget in dbContext.ExpenseBudgetAssociations on budget.Id equals expenseBudget.BudgetId into eb
+                select new
+                {
+                    Budget = budget,
+                    AmountSpent = (from assoc in eb
+                                   join expense in dbContext.Expenses on assoc.ExpenseId equals expense.Id
+                                   select expense.Amount).Sum()
+                }
+            ).ToListAsync();
+
+
+            return result.Select(x => (Budget: x.Budget, AmountSpent: x.AmountSpent));
+        }
+
+        public async Task<(Budget budget, double amountSpent)?> GetBudgetWithAmountSpentByIdAsync(long id)
+        {
+            var result = await (
+                from budget in dbContext.Budgets
+                where budget.Id == id
+                join expenseBudget in dbContext.ExpenseBudgetAssociations on budget.Id equals expenseBudget.BudgetId into eb
+                select new
+                {
+                    Budget = budget,
+                    AmountSpent = (from assoc in eb
+                                   join expense in dbContext.Expenses on assoc.ExpenseId equals expense.Id
+                                   select expense.Amount).Sum()
+                }
+            ).SingleOrDefaultAsync();
+
+            if (result == null)
+            {
+                return null;
+            }
+
+            return (result.Budget, result.AmountSpent);
         }
 
         public async Task<IEnumerable<Budget>> GetBudgetsByExpenseDate(DateOnly date)
@@ -20,12 +57,6 @@ namespace ExpenseTracker.Infrastructure.Repositories
                           select budget;
 
             return await budgets.ToListAsync();
-        }
-
-        public async Task<Budget?> GetByIdAsync(long id)         
-        {
-            var budget = await dbContext.Budgets.SingleOrDefaultAsync(b => b.Id == id);
-            return budget;
         }
 
         public async Task<long> CreateAsync(Budget budget)
@@ -45,6 +76,18 @@ namespace ExpenseTracker.Infrastructure.Repositories
         {
             dbContext.Update(budget);
             await dbContext.SaveChangesAsync();
+        }
+
+        public async Task<Budget?> GetByIdAsync(long id)
+        {
+            var budget = await dbContext.Budgets.SingleOrDefaultAsync(b => b.Id == id);
+            return budget;
+        }
+
+        public async Task<IEnumerable<Budget>> GetAllAsync()
+        {
+            var budgets = await dbContext.Budgets.ToListAsync();
+            return budgets;
         }
     }
 }

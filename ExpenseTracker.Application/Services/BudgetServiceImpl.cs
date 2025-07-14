@@ -3,12 +3,14 @@ using ExpenseTracker.Application.Interfaces;
 using ExpenseTracker.Application.Models;
 using ExpenseTracker.Domain.Entities;
 using ExpenseTracker.Domain.Repositories;
+using Microsoft.Extensions.Logging;
 
 namespace ExpenseTracker.Application.Services
 {
     internal class BudgetServiceImpl(
         IBudgetRepository budgetRepository,
-        IExpenseRepository expenseRepository
+        IExpenseRepository expenseRepository,
+        ILogger<BudgetServiceImpl> logger
         ) : IBudgetService
     {
         public async Task<long> Create(Budget budget)
@@ -35,18 +37,28 @@ namespace ExpenseTracker.Application.Services
             return budgets;
         }
 
+        public async Task<IEnumerable<BudgetDetails>> GetAllBudgetsWithAmountSpent()
+        {
+            var budgets = await budgetRepository.GetAllBudgetsWithAmountSpentAsync();
+
+            foreach ((Budget, double) budgetDetails in budgets)
+            {
+                logger.LogInformation($"Budget: {budgetDetails.Item1}, spent: {budgetDetails.Item2}");
+            }
+
+            return budgets.Select(b => new BudgetDetails(b.budget, b.amountSpent));
+        }
+
         public async Task<BudgetDetails> GetById(long id)
         {
-            var budget = await budgetRepository.GetByIdAsync(id);
+            var budget = await budgetRepository.GetBudgetWithAmountSpentByIdAsync(id);
 
             if (budget == null)
             {
                 throw new NotFoundException($"Budget with Id: {id} not found.");
             }
 
-            var totalSpent = await expenseRepository.GetTotalSpentAmountByBudgetId(id);
-            var budgetDetails = new BudgetDetails(budget, totalSpent);
-
+            var budgetDetails = new BudgetDetails(budget.Value.budget, budget.Value.amountSpent);
             return budgetDetails;
         }
 

@@ -50,19 +50,6 @@ namespace ExpenseTracker.Infrastructure.Repositories
             return await expenses.ToListAsync();
         }
 
-        public async Task<double> GetTotalSpentAmountByBudgetId(long budgetId)
-        {
-            var totalSpent = await (
-                from expense in dbContext.Expenses
-                join expenseBudget in dbContext.ExpenseBudgetAssociations
-                on expense.Id equals expenseBudget.ExpenseId
-                where expenseBudget.BudgetId == budgetId
-                select expense.Amount
-            ).SumAsync(); 
-
-            return totalSpent;
-        }
-
         public async Task<long> CreateAsync(Expense expense)
         {
             dbContext.Expenses.Add(expense);

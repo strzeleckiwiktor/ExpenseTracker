@@ -8,7 +8,6 @@ namespace ExpenseTracker.Domain.Repositories
         public Task<Expense?> GetByIdAsync(long id);
         public Task<IEnumerable<Expense>> GetExpensesByCategoryAsync(long categoryId);
         public Task<IEnumerable<Expense>> GetExpensesByBudgetId(long budgetId);
-        public Task<double> GetTotalSpentAmountByBudgetId(long budgetId);
         public Task<long> CreateAsync(Expense expense);
         public Task UpdateAsync(Expense expense);
         public Task DeleteAsync(Expense expense);

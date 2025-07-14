@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using ExpenseTracker.API.DTOs.Budget;
 using ExpenseTracker.Application.Interfaces;
+using ExpenseTracker.Application.Models;
 using ExpenseTracker.Domain.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,13 +12,20 @@ namespace ExpenseTracker.API.Controllers
     [ApiController]
     public class BudgetsController(
         IBudgetService budgetService,
-        IMapper mapper
+        IMapper mapper,
+        ILogger<BudgetsController> logger
         ) : ControllerBase
     {
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var budgets = await budgetService.GetAll();
+            var budgets = await budgetService.GetAllBudgetsWithAmountSpent();
+
+            foreach(BudgetDetails budgetDetails in budgets)
+            {
+                logger.LogInformation($"Budget: {budgetDetails.Budget}, spent: {budgetDetails.TotalSpent}");
+            }
+
             var budgetDTOs = mapper.Map<IEnumerable<BudgetDTO>>(budgets);
             return Ok(budgetDTOs);
         }
