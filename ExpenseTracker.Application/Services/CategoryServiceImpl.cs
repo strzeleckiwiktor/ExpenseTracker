@@ -29,6 +29,17 @@ namespace ExpenseTracker.Application.Services
             return category;
         }
 
+        public async Task<Category?> GetCategoryWithExpensesById(long id)
+        {
+            var category = await repository.GetCategoryWithExpensesByIdAsync(id);
+
+            if (category == null)
+            {
+                throw new NotFoundException($"Category with Id {id} not found.");
+            }
+
+            return category;
+        }
         public async Task<long> Create(Category category)
         {
             var id = await repository.CreateAsync(category);

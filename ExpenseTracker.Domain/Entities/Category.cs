@@ -5,7 +5,6 @@
         public long Id { get; set; }
         public string Name { get; set; } = default!;
 
-        //Navigation properties
         public ICollection<Expense> Expenses { get; } = default!;
     }
 }

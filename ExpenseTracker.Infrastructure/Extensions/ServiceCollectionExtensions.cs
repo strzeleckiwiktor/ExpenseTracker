@@ -20,7 +20,6 @@ namespace ExpenseTracker.Infrastructure.Extensions
             services.AddScoped<ICategoryRepository, CategoryRepositoryImpl>();
             services.AddScoped<IExpenseRepository, ExpenseRepositoryImpl>();
             services.AddScoped<IBudgetRepository, BudgetRepositoryImpl>();
-            services.AddScoped<IExpenseBudgetRepository, ExpenseBudgetRepositoryImpl>();
 
             //services.AddIdentityApiEndpoints<User>().AddEntityFrameworkStores<ExpenseTrackerDbContext>();
         }

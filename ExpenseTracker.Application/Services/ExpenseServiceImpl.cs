@@ -10,9 +10,7 @@ namespace ExpenseTracker.Application.Services
     internal class ExpenseServiceImpl(
         IExpenseRepository expenseRepository,
         ICategoryRepository categoryRepository,
-        IBudgetRepository budgetRepository,
-        IExpenseBudgetRepository expenseBudgetRepository,
-        ILogger<ExpenseServiceImpl> logger
+        IBudgetRepository budgetRepository
         ) : IExpenseService
     {
         public async Task<IEnumerable<Expense>> GetAll()
@@ -33,41 +31,25 @@ namespace ExpenseTracker.Application.Services
             return expense;
         }
 
-        public async Task<IEnumerable<Expense>> GetExpensesByCategory(long categoryId)
-        {
-            if (!await categoryRepository.ExistsAsync(categoryId))
-                throw new NotFoundException($"Category with Id {categoryId} not found.");
-
-            var expenses = await expenseRepository.GetExpensesByCategoryAsync(categoryId);
-            return expenses;
-        }
-
         public async Task<long> Create(Expense expense)
         {
             var categoryId = expense.CategoryId;
             var category = await categoryRepository.GetByIdAsync(categoryId);
-
             if (category == null)
             {
                 throw new ArgumentException($"Category with Id: {categoryId} not found.");
             }
-
             expense.Category = category;
-            var expenseId = await expenseRepository.CreateAsync(expense);
 
-            var budgets = await budgetRepository.GetBudgetsByExpenseDate(expense.Date);
+            var budgets = await budgetRepository.GetBudgetsByExpenseDateAsync(expense.Date);
 
             foreach (Budget budget in budgets)
             {
-                var expenseBudget = new ExpenseBudget
-                {
-                    BudgetId = budget.Id,
-                    ExpenseId = expenseId,
-                };
-                await expenseBudgetRepository.CreateAsync(expenseBudget);
+                expense.Budgets.Add(budget);
             }
 
-            return expenseId;
+            return await expenseRepository.CreateAsync(expense);        
+            
         }
 
         public async Task Update(long id, string name, double amount, DateOnly date, string description, long categoryId)

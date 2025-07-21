@@ -11,7 +11,7 @@ namespace ExpenseTracker.Domain.Entities
         public DateOnly Date { get; set; } = DateOnly.FromDateTime(DateTime.Now);
         public long CategoryId { get; set; }
 
-        //Navigation properties
         public Category Category { get; set; } = default!;
+        public ICollection<Budget> Budgets { get; set; } = new List<Budget>();
     }
 }

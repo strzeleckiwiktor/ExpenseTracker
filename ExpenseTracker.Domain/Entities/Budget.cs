@@ -13,5 +13,6 @@ namespace ExpenseTracker.Domain.Entities
         public double Amount { get; set; }
         public DateOnly StartDate { get; set; }
         public DateOnly EndDate { get; set; }
+        public ICollection<Expense> Expenses { get; set; } = new List<Expense>();
     }
 }

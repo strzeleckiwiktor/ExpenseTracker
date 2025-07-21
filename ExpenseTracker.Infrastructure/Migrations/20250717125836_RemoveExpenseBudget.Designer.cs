@@ -4,6 +4,7 @@ using ExpenseTracker.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ExpenseTracker.API.Migrations
 {
     [DbContext(typeof(ExpenseTrackerDbContext))]
-    partial class ExpensesTrackerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250717125836_RemoveExpenseBudget")]
+    partial class RemoveExpenseBudget
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,7 +37,7 @@ namespace ExpenseTracker.API.Migrations
 
                     b.HasIndex("ExpensesId");
 
-                    b.ToTable("BudgetExpense", (string)null);
+                    b.ToTable("BudgetExpense");
                 });
 
             modelBuilder.Entity("ExpenseTracker.Domain.Entities.Budget", b =>
@@ -60,7 +63,7 @@ namespace ExpenseTracker.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Budgets", (string)null);
+                    b.ToTable("Budgets");
                 });
 
             modelBuilder.Entity("ExpenseTracker.Domain.Entities.Category", b =>
@@ -77,7 +80,7 @@ namespace ExpenseTracker.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("Categories");
 
                     b.HasData(
                         new
@@ -130,7 +133,7 @@ namespace ExpenseTracker.API.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Expenses", (string)null);
+                    b.ToTable("Expenses");
                 });
 
             modelBuilder.Entity("BudgetExpense", b =>

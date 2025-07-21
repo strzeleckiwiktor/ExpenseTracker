@@ -22,6 +22,15 @@ namespace ExpenseTracker.Infrastructure.Repositories
             return category;
         }
 
+        public async Task<Category?> GetCategoryWithExpensesByIdAsync(long id)
+        {
+            var category = await dbContext.Categories
+                .Include(c => c.Expenses)
+                .SingleOrDefaultAsync(c => c.Id == id);
+
+            return category;
+        }
+
         public async Task<long> CreateAsync(Category category)
         {
             dbContext.Categories.Add(category);

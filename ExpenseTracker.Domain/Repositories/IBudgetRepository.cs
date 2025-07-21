@@ -12,7 +12,7 @@ namespace ExpenseTracker.Domain.Repositories
         public Task<IEnumerable<Budget>> GetAllAsync();
         public Task<Budget?> GetByIdAsync(long id);
         public Task<(Budget budget, double amountSpent)?> GetBudgetWithAmountSpentByIdAsync(long id);
-        public Task<IEnumerable<Budget>> GetBudgetsByExpenseDate(DateOnly date);
+        public Task<IEnumerable<Budget>> GetBudgetsByExpenseDateAsync(DateOnly date);
         public Task<IEnumerable<(Budget budget, double amountSpent)>> GetAllBudgetsWithAmountSpentAsync();
         public Task<long> CreateAsync(Budget budget);
         public Task UpdateAsync(Budget budget);

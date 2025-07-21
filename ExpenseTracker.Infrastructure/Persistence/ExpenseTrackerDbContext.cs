@@ -10,7 +10,6 @@ namespace ExpenseTracker.Infrastructure.Persistence
         internal DbSet<Expense> Expenses { get; set; }
         internal DbSet<Category> Categories { get; set; }
         internal DbSet<Budget> Budgets { get; set; }
-        internal DbSet<ExpenseBudget> ExpenseBudgetAssociations { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -21,7 +20,7 @@ namespace ExpenseTracker.Infrastructure.Persistence
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Expense>()
+            modelBuilder.Entity<Expense>()            
                 .HasOne(e => e.Category)
                 .WithMany(e => e.Expenses)
                 .HasForeignKey(e => e.CategoryId)

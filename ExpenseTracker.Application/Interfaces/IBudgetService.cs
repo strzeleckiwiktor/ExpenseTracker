@@ -10,7 +10,6 @@ namespace ExpenseTracker.Application.Interfaces
 {
     public interface IBudgetService
     {
-        public Task<IEnumerable<Budget>> GetAll();
         public Task<IEnumerable<BudgetDetails>> GetAllBudgetsWithAmountSpent();
         public Task<BudgetDetails> GetById(long id);
         public Task<long> Create(Budget budget);

@@ -35,10 +35,10 @@ namespace ExpenseTracker.API.Controllers
         }
 
         [HttpGet("{id}/expenses")]
-        public async Task<IActionResult> GetExpensesByCategory(long id)
+        public async Task<IActionResult> GetExpensesByCategory(long categoryId)
         {
-            var expenses = await expenseService.GetExpensesByCategory(id);
-            var expenseDTOs = mapper.Map<IEnumerable<ExpenseDTO>>(expenses);
+            var category = await categoryService.GetCategoryWithExpensesById(categoryId);
+            var expenseDTOs = mapper.Map<IEnumerable<ExpenseDTO>>(category!.Expenses);
             return Ok(expenseDTOs);
         }
 

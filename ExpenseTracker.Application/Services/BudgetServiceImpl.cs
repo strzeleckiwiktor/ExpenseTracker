@@ -9,14 +9,19 @@ namespace ExpenseTracker.Application.Services
 {
     internal class BudgetServiceImpl(
         IBudgetRepository budgetRepository,
-        IExpenseRepository expenseRepository,
-        ILogger<BudgetServiceImpl> logger
+        IExpenseRepository expenseRepository
         ) : IBudgetService
     {
         public async Task<long> Create(Budget budget)
         {
-            var id = await budgetRepository.CreateAsync(budget);
-            return id;
+            var expenses = await expenseRepository.GetExpensesBetweenDatesAsync(budget.StartDate, budget.EndDate);
+
+            foreach (Expense expense in expenses)
+            {
+                budget.Expenses.Add(expense);
+            }
+
+            return await budgetRepository.CreateAsync(budget);
         }
 
         public async Task Delete(long id)
@@ -31,21 +36,9 @@ namespace ExpenseTracker.Application.Services
             await budgetRepository.DeleteAsync(budget);
         }
 
-        public async Task<IEnumerable<Budget>> GetAll()
-        {
-            var budgets = await budgetRepository.GetAllAsync();
-            return budgets;
-        }
-
         public async Task<IEnumerable<BudgetDetails>> GetAllBudgetsWithAmountSpent()
         {
             var budgets = await budgetRepository.GetAllBudgetsWithAmountSpentAsync();
-
-            foreach ((Budget, double) budgetDetails in budgets)
-            {
-                logger.LogInformation($"Budget: {budgetDetails.Item1}, spent: {budgetDetails.Item2}");
-            }
-
             return budgets.Select(b => new BudgetDetails(b.budget, b.amountSpent));
         }
 

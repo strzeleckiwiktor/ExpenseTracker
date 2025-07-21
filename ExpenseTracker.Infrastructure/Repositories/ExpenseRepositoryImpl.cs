@@ -28,28 +28,15 @@ namespace ExpenseTracker.Infrastructure.Repositories
             return expense;
         }
 
-        public async Task<IEnumerable<Expense>> GetExpensesByCategoryAsync(long categoryId)
+        public async Task<IEnumerable<Expense>> GetExpensesBetweenDatesAsync(DateOnly startDate, DateOnly endDate)
         {
             var expenses = await dbContext.Expenses
-                .Where(e => e.CategoryId == categoryId)
-                .Include(e => e.Category)
+                .Where(e => e.Date >= startDate && e.Date <= endDate)
                 .ToListAsync();
 
             return expenses;
         }
-
-        public async Task<IEnumerable<Expense>> GetExpensesByBudgetId(long budgetId)
-        {
-            var expenses =
-                from expense in dbContext.Expenses
-                join expenseBudget in dbContext.ExpenseBudgetAssociations
-                on expense.Id equals expenseBudget.ExpenseId
-                where expenseBudget.BudgetId == budgetId
-                select expense;
-
-            return await expenses.ToListAsync();
-        }
-
+ 
         public async Task<long> CreateAsync(Expense expense)
         {
             dbContext.Expenses.Add(expense);

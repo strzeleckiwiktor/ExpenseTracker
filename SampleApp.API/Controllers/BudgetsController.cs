@@ -20,12 +20,6 @@ namespace ExpenseTracker.API.Controllers
         public async Task<IActionResult> GetAll()
         {
             var budgets = await budgetService.GetAllBudgetsWithAmountSpent();
-
-            foreach(BudgetDetails budgetDetails in budgets)
-            {
-                logger.LogInformation($"Budget: {budgetDetails.Budget}, spent: {budgetDetails.TotalSpent}");
-            }
-
             var budgetDTOs = mapper.Map<IEnumerable<BudgetDTO>>(budgets);
             return Ok(budgetDTOs);
         }
