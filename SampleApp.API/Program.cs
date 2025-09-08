@@ -1,31 +1,31 @@
-using ExpenseTracker.Infrastructure.Extensions;
-using Microsoft.OpenApi.Models;
-using ExpenseTracker.Application.Extensions;
-using ExpenseTracker.API.Mappers;
-using FluentValidation;
 using ExpenseTracker.API.Extensions;
+using ExpenseTracker.Application.Extensions;
+using ExpenseTracker.Domain.Entities;
+using ExpenseTracker.Infrastructure.Extensions;
+using ExpenseTracker.Infrastructure.Persistence;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c =>
-{
-    c.AddSecurityDefinition("bearerAuth", new OpenApiSecurityScheme
+builder.Services.AddSwaggerGen(c => {
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
     {
-        Type = SecuritySchemeType.Http,
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey,
         Scheme = "Bearer",
     });
-
-    c.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement {
         {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference { Type =  ReferenceType.SecurityScheme, Id = "bearerAuth" }
+            new OpenApiSecurityScheme {
+                Reference = new OpenApiReference {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
             },
-            []
+            new string[] {}
         }
     });
 });
@@ -33,6 +33,9 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.ConfigureInfrastructureServices(builder.Configuration);
 builder.Services.ConfigureApplicationServices();
 builder.Services.ConfigurePresentationServices();
+
+builder.Services.AddIdentityApiEndpoints<User>()
+    .AddEntityFrameworkStores<AuthDbContext>();
 
 
 var app = builder.Build();
@@ -50,6 +53,9 @@ app.UseHttpsRedirection();
 //app.MapGroup("api/auth").MapIdentityApi<User>();
 
 app.UseAuthorization();
+app.MapIdentityApi<User>();
+
+
 
 app.MapControllers();
 

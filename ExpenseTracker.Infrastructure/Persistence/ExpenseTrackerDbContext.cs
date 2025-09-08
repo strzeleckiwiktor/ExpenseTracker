@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ExpenseTracker.Infrastructure.Persistence
 {
-    internal class ExpenseTrackerDbContext : DbContext
+    public class ExpenseTrackerDbContext : DbContext
     {
         public ExpenseTrackerDbContext(DbContextOptions<ExpenseTrackerDbContext> options) : base(options) { }
 

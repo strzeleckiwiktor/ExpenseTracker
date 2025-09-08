@@ -3,6 +3,7 @@ using ExpenseTracker.API.DTOs.Budget;
 using ExpenseTracker.Application.Interfaces;
 using ExpenseTracker.Application.Models;
 using ExpenseTracker.Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,6 +18,7 @@ namespace ExpenseTracker.API.Controllers
         ) : ControllerBase
     {
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetAll()
         {
             var budgets = await budgetService.GetAllBudgetsWithAmountSpent();

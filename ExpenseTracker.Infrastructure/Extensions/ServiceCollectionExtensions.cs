@@ -1,9 +1,11 @@
-﻿using ExpenseTracker.Infrastructure.Persistence;
-using Microsoft.Extensions.DependencyInjection;
+﻿using ExpenseTracker.Domain.Entities;
+using ExpenseTracker.Domain.Repositories;
+using ExpenseTracker.Infrastructure.Persistence;
+using ExpenseTracker.Infrastructure.Repositories;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using ExpenseTracker.Domain.Repositories;
-using ExpenseTracker.Infrastructure.Repositories;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace ExpenseTracker.Infrastructure.Extensions
 {
@@ -17,11 +19,16 @@ namespace ExpenseTracker.Infrastructure.Extensions
                 options.UseSqlServer(connectionString);
             });
 
+            services.AddDbContext<AuthDbContext>(options =>
+            {
+                options.UseSqlServer(connectionString);
+            });
+
             services.AddScoped<ICategoryRepository, CategoryRepositoryImpl>();
             services.AddScoped<IExpenseRepository, ExpenseRepositoryImpl>();
             services.AddScoped<IBudgetRepository, BudgetRepositoryImpl>();
 
-            //services.AddIdentityApiEndpoints<User>().AddEntityFrameworkStores<ExpenseTrackerDbContext>();
+            
         }
     }
 }
