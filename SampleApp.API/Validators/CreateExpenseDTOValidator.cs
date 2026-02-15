@@ -1,5 +1,4 @@
-﻿using System.Data.Entity.Migrations.Model;
-using ExpenseTracker.API.DTOs.Expense;
+﻿using ExpenseTracker.API.DTOs.Expense;
 using FluentValidation;
 
 namespace ExpenseTracker.API.Validators

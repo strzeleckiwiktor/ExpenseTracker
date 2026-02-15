@@ -3,7 +3,6 @@ using ExpenseTracker.Application.Interfaces;
 using ExpenseTracker.Domain.Entities;
 using ExpenseTracker.Domain.Repositories;
 using Microsoft.Extensions.Logging;
-using System.Data.Entity.Core.Mapping;
 
 namespace ExpenseTracker.Application.Services
 {

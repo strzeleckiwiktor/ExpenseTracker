@@ -4,6 +4,9 @@ using ExpenseTracker.Application.Extensions;
 using ExpenseTracker.API.Mappers;
 using FluentValidation;
 using ExpenseTracker.API.Extensions;
+using System;
+using ExpenseTracker.Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,6 +39,11 @@ builder.Services.ConfigurePresentationServices();
 
 
 var app = builder.Build();
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<ExpenseTrackerDbContext>();
+    dbContext.Database.Migrate();
+}
 app.UseExceptionHandler(_ => { });
 
 // Configure the HTTP request pipeline.
