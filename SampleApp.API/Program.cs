@@ -7,6 +7,7 @@ using ExpenseTracker.API.Extensions;
 using System;
 using ExpenseTracker.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
+using Polly;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -43,7 +44,14 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<ExpenseTrackerDbContext>();
-    dbContext.Database.Migrate();
+
+    Policy
+        .Handle<Exception>()
+        .WaitAndRetry(
+            retryCount: 5,
+            sleepDurationProvider: attempt => TimeSpan.FromSeconds(attempt * 2)
+        )
+        .Execute(() => dbContext.Database.Migrate()); 
 }
 app.UseExceptionHandler(_ => { });
 
